@@ -5,13 +5,13 @@ function getUUID() {
   });
 }
 
-exports.create = function (type, payload, serverInfo) {
-	return new Message(getUUID(), type, payload, serverInfo);
+exports.create = function (resourceUri, payload, serverInfo) {
+	return new Message(getUUID(), resourceUri, payload, serverInfo);
 };
 
-function Message(id, type, payload, serverInfo) {
+function Message(id, resourceUri, payload, serverInfo) {
   this.id = id;
-	this.type = type;
+	this.resourceUri = resourceUri;
 	this.payload = payload;
 	this.origin = serverInfo;
 }
@@ -19,7 +19,7 @@ function Message(id, type, payload, serverInfo) {
 Message.prototype.toString = function () {
 	var _serializable_ = {
 		id: this.id,
-		type: this.type,
+		resourceUri: this.resourceUri,
 		payload: this.payload,
 		origin: this.origin
 	};
@@ -32,5 +32,5 @@ Message.prototype.toBuffer = function () {
 
 exports.parse = function (str) {
 	var parsed = JSON.parse(str);
-	return new Message(parsed.id, parsed.type, parsed.payload, parsed.origin);
+	return new Message(parsed.id, parsed.resourceUri, parsed.payload, parsed.origin);
 };
