@@ -1,0 +1,27 @@
+{
+  "name": "distro",
+  "version": "0.0.1",
+  "description": "An small simple wrapper over UDP Datagrams to create clients/servers with an standard message format.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:hgarcia/distro.git"
+  },
+  "keywords": [
+    "Distributed",
+    "applications"
+  ],
+  "devDependencies": {
+    "mocha": "1.13.0",
+    "should": "2.0.2",
+    "sinon": "1.7.3"
+  },
+  "author": "Hernan Garcia <hernan@dynamicprogrammer.com> (http://dynamicprogrammer.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hgarcia/distro/issues"
+  }
+}
