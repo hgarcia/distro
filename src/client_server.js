@@ -1,5 +1,4 @@
 var dgram = require('dgram');
-var distroMsg = require('./message');
 
 function sendMsg(type, message, serverInfo, logger, cb) {
 	var client = dgram.createSocket(type);
@@ -31,9 +30,10 @@ function getTypeForClient(rinfo) {
 
 function registerNotification(server) {
 	server.on("message", function (message, rinfo) {
-		var msg = distroMsg.parse(message)
-		if (msg.origin) {
-			sendMsg(getTypeForClient(rinfo), distroMsg.create("RECEIVED", {msgId: msg.id}), msg.origin);
+		var msg = parseMsg(message)
+		if (msg.headers && msg.headers.address && msg.headers.port) {
+			var headers = {uri: "RECEIVED"};
+			sendMsg(getTypeForClient(rinfo), createMessage(headers, {msgId: msg.id}), msg.headers);
 		} 
 	});
 }
@@ -41,7 +41,7 @@ function registerNotification(server) {
 function registerServerHandlers(server, msgHandler, logger) {
 
 	server.on("message", function (message, rinfo) {
-		var msg = distroMsg.parse(message)
+		var msg = parseMsg(message)
 		msgHandler(null, msg);
 		logger.log("server got: " + message + " from " + rinfo.address + ":" + rinfo.port);
 	});
@@ -75,11 +75,49 @@ function client(type, logger) {
 	};
 }
 
+function getUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+  });
+}
+
+function createMessage(headers, payload) {
+	return new Message(getUUID(), headers, payload);
+}
+
+function parseMsg(str) {
+	var parsed = JSON.parse(str);
+	return new Message(parsed.id, parsed.headers, parsed.payload);
+}
+
+function Message(id, headers, payload) {
+  this.id = id;
+	this.headers = headers;
+	this.payload = payload;
+}
+
+Message.prototype.toString = function () {
+	var _serializable_ = {
+		id: this.id,
+		headers: this.headers,
+		payload: this.payload
+	};
+	return JSON.stringify(_serializable_);
+}
+
+Message.prototype.toBuffer = function () {
+	return new Buffer(this.toString());
+};
+
+exports.parse = parseMsg;
+
 exports.create = function (_logger) {
 	var logger = _logger || console;
 	var udp4 = 'udp4';
 	var udp6 = 'udp6';
 	return {
+		message: createMessage,
 		udp4Server: server(udp4, logger),
 		udp6Server: server(udp6, logger),
 		udp4Client: client(udp4, logger),

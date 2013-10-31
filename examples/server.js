@@ -1,4 +1,4 @@
-var distro = require("../src/client_server");
+var distro = require("../index");
 
 var server = distro.create({log: function () {}}).udp4Server({port: 41234});
 server.receive(cb);

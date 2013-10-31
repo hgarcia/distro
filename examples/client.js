@@ -1,7 +1,7 @@
-var distro = require("../src/client_server");
-var msg = require("../src/message");
+var distro = require("../index");
 
-var obj = msg.create("MSG", "This is the payload", {address: "127.0.0.1", port: 41235});
+var headers = {uri: "MSG", address: "127.0.0.1", port: 41235}
+var obj = distro.create().message(headers, "This is the payload");
 
 distro.create({log: function () {}}).udp4Server({port: 41235}).receive(cb);
 distro.create({log: function () {}}).udp4Client({port: 41234}).send(obj);
