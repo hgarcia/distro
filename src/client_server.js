@@ -28,14 +28,27 @@ function getTypeForClient(rinfo) {
 	return (rinfo.family.toLowerCase() === 'ipv4') ? 'udp4' : 'udp6';
 }
 
-function registerNotification(server) {
+function registerMessage(server) {
 	server.on("message", function (message, rinfo) {
 		var msg = parseMsg(message)
+		handleVerbs(server, msg);
 		if (msg.headers && msg.headers.address && msg.headers.port) {
 			var headers = {uri: "RECEIVED"};
 			sendMsg(getTypeForClient(rinfo), createMessage(headers, {msgId: msg.id}), msg.headers);
 		} 
 	});
+}
+
+function handleVerbs(server, msg) {
+	if (msg.headers.verb) {
+		server[msg.headers.verb.toUpperCase()].forEach(function (verbHandler) {
+			verbHandler(null, msg);
+		});
+	} else {
+		server.GET.forEach(function (verbHandler) {
+			verbHandler(null, msg);
+		});
+	}
 }
 
 function registerServerHandlers(server, msgHandler, logger) {
@@ -56,10 +69,34 @@ function registerServerHandlers(server, msgHandler, logger) {
 function server(type, logger) {
 	return function (serverInfo) {		
 		var server = createServer(type, serverInfo, logger);
-		registerNotification(server);
+		server.HEAD = [];
+		server.GET = [];
+		server.POST = [];
+		server.PUT = [];
+		server.PATCH = [];
+		server.DELETE = [];
+		registerMessage(server);
 		return {
 			receive: function (msgHandler) {
 				registerServerHandlers(server, msgHandler, logger);
+			},
+			head: function (msgHandler) {
+				server.HEAD.push(msgHandler);
+			},
+			get: function (msgHandler) {
+				server.GET.push(msgHandler);
+			},
+			post: function (msgHandler) {
+				server.POST.push(msgHandler);
+			},
+			put: function (msgHandler) {
+				server.PUT.push(msgHandler);				
+			},
+			patch: function (msgHandler) {
+				server.PATCH.push(msgHandler);
+			},
+			del: function (msgHandler) {
+				server.DELETE.push(msgHandler);
 			}
 		};
 	};
