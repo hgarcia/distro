@@ -7,5 +7,5 @@ distro.create({log: function () {}}).udp4Server({port: 41235}).receive(cb);
 distro.create({log: function () {}}).udp4Client({port: 41234}).send(obj);
 
 function cb(err, msg) {
-	console.log("Client called back from the server: " + msg);
+  console.log("Client called back from the server: " + msg);
 }
