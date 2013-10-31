@@ -4,7 +4,8 @@
   "description": "An small simple wrapper over UDP Datagrams to create clients/servers with an standard message format.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "mocha -R spec",
+    "test-w": "mocha -w -R spec"
   },
   "repository": {
     "type": "git",
