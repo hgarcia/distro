@@ -1,6 +1,6 @@
 {
   "name": "distro",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An small simple wrapper over UDP Datagrams to create clients/servers with an standard message format.",
   "main": "index.js",
   "scripts": {
