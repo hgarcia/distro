@@ -4,7 +4,7 @@
   "description": "An small simple wrapper over UDP Datagrams to create clients/servers with an standard message format.",
   "main": "index.js",
   "scripts": {
-    "test": "node_modules/karma/bin/karma start js_spec/karma.ut.config.js"
+   "test": "mocha test/*.tests.js -R spec"
   },
   "repository": {
     "type": "git",
@@ -15,16 +15,9 @@
     "applications"
   ],
   "devDependencies": {
-    "karma-phantomjs-launcher": "*",
-    // "karma-chrome-launcher": "0.1.0",
-    // "karma-firefox-launcher": "0.1.0",
-    "karma-jasmine": "*",
-    "karma-ng-scenario": "*",
-    // "jslint": "0.1.9",
-    "karma-junit-reporter": "*",
-    "karma": "*",
-    "karma-coverage": "*",
-    "phantomjs": "*"
+    "mocha": "1.7.4",
+    "should": "1.2.1",
+    "sinon": "1.5.2"
   },
   "author": "Hernan Garcia <hernan@dynamicprogrammer.com> (http://dynamicprogrammer.com)",
   "license": "MIT",
