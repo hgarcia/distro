@@ -1,5 +1,7 @@
 # "Distro" encapsulates the work needed to create UDP datagram servers and clients.
 
+[![Build Status](https://travis-ci.org/hgarcia/distro.png?branch=master)](https://travis-ci.org/hgarcia/distro)
+
 This is a very early version and the API may change but I like what I have so far.
 
 As part of the package I included a message factory as well to try to formalize an early interface for these messages that the servers and clients can agree upon and provide some other layers on top of the basic UDP protocol (see below "Working with verbs").
