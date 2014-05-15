@@ -1,11 +1,11 @@
 {
   "name": "distro",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "An small simple wrapper over UDP Datagrams to create clients/servers with an standard message format.",
   "main": "index.js",
   "scripts": {
-   "test-w": "mocha test/*.tests.js -R spec -w",
-   "test": "mocha test/*.tests.js -R spec"
+    "test-w": "mocha test/*.tests.js -R spec -w",
+    "test": "mocha test/*.tests.js -R spec"
   },
   "repository": {
     "type": "git",
