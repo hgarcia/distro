@@ -97,3 +97,59 @@ The server object can register different handlers for each of those verbs. Inste
 You don't need to specify the `get` verb for messages. If you registered handlers with the `get` method and your messages don't have a verb, this handler(s) will be used.
 
 You can still add handlers to `receive` that will be called no matter the verb of the messages, this can be helpful for audit, logging or error handlers purposes.
+
+## API Documentation
+
+#### parse(data)
+
+Given a serialized `Message` returns a `Message` object
+
+#### create([logger])
+
+The `logger` is any object that implements the `log` method. If a logger is not given the native `console` object will be used.
+
+Returns a `distro` object
+
+#### distro.message(headers, payload)
+
+Creates a new `Message` object with the given headers and payload.
+
+#### distro.tcpServer()
+#### distro.udp4Server()
+#### distro.udp6Server()
+
+Returns a `Server` object that uses the protocol in the function name prefix.
+
+#### distro.tcpClient()
+#### distro.udp4Client()
+#### distro.udp6Client()
+
+Returns a `Client` object that uses the protocol in the function name prefix.
+
+#### server.receive([callback])
+
+Adds a listener that will be called each time the server is called, without consideration of the verb used in the `headers`
+
+#### server.head([callback])
+#### server.get([callback])
+#### server.post([callback])
+#### server.put([callback])
+#### server.del([callback])
+#### server.patch([callback])
+
+Adds the listener to be called when a message is received for the given verb on the `headers`
+
+#### new Message(id, headers, payload)
+
+The `id` is expected to be a UUID.
+The `verb` for the message. Defaults to `GET`
+The `headers` object contains a `uri`, an `address` for the server/client to talk to and a `port` number.
+The `payload` should be a 'flat' serializable object.
+
+#### message.toString()
+
+Returns a string representation of a serialized `Message`
+
+#### message.toBuffer()
+
+Return a buffer with the result of calling `toString()` on the `Message`
