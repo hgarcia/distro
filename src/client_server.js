@@ -1,4 +1,7 @@
 var dgram = require('dgram');
+var tcp = require('./tcp_client_server');
+var parser = require('./parser');
+var message = require('./messages');
 
 function sendMsg(type, message, serverInfo, logger, cb) {
   var client = dgram.createSocket(type);
@@ -29,12 +32,12 @@ function getTypeForClient(rinfo) {
 }
 
 function registerMessage(server) {
-  server.on("message", function (message, rinfo) {
-    var msg = parseMsg(message)
+  server.on("message", function (data, rinfo) {
+    var msg = parser.parse(data);
     handleVerbs(server, msg);
     if (msg.headers && msg.headers.address && msg.headers.port) {
       var headers = {uri: "RECEIVED"};
-      sendMsg(getTypeForClient(rinfo), createMessage(headers, {msgId: msg.id}), msg.headers);
+      sendMsg(getTypeForClient(rinfo), message.createMessage(headers, {msgId: msg.id}), msg.headers);
     } 
   });
 }
@@ -54,7 +57,7 @@ function handleVerbs(server, msg) {
 function registerServerHandlers(server, msgHandler, logger) {
 
   server.on("message", function (message, rinfo) {
-    var msg = parseMsg(message)
+    var msg = parser.parse(message);
     msgHandler(null, msg);
     logger.log("server got: " + message + " from " + rinfo.address + ":" + rinfo.port);
   });
@@ -112,52 +115,19 @@ function client(type, logger) {
   };
 }
 
-function getUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
-      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-      return v.toString(16);
-  });
-}
-
-function createMessage(headers, payload) {
-  return new Message(getUUID(), headers, payload);
-}
-
-function parseMsg(str) {
-  var parsed = JSON.parse(str);
-  return new Message(parsed.id, parsed.headers, parsed.payload);
-}
-
-function Message(id, headers, payload) {
-  this.id = id;
-  this.headers = headers;
-  this.payload = payload;
-}
-
-Message.prototype.toString = function () {
-  var _serializable_ = {
-    id: this.id,
-    headers: this.headers,
-    payload: this.payload
-  };
-  return JSON.stringify(_serializable_);
-}
-
-Message.prototype.toBuffer = function () {
-  return new Buffer(this.toString());
-};
-
-exports.parse = parseMsg;
+exports.parse = parser.parse;
 
 exports.create = function (_logger) {
   var logger = _logger || console;
   var udp4 = 'udp4';
   var udp6 = 'udp6';
   return {
-    message: createMessage,
+    message: message.createMessage,
     udp4Server: server(udp4, logger),
     udp6Server: server(udp6, logger),
     udp4Client: client(udp4, logger),
-    udp6Client: client(udp6, logger)
+    udp6Client: client(udp6, logger),
+    tcpClient: tcp.client(logger),
+    tcpServer: tcp.server(logger)
   };
 };
