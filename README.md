@@ -1,6 +1,11 @@
-# "Distro" encapsulates the work needed to create UDP datagram servers and clients.
+# "Distro" encapsulates the work needed to create UDP and TCP servers and clients and add a simple message protocol.
 
 [![Build Status](https://travis-ci.org/hgarcia/distro.png?branch=master)](https://travis-ci.org/hgarcia/distro)
+
+### UPDATES
+
+0.0.5 Added support for TCP servers and clients
+0.0.2 Initial release
 
 This is a very early version and the API may change but I like what I have so far.
 
