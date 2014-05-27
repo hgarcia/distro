@@ -128,6 +128,8 @@ exports.create = function (_logger) {
     udp4Client: client(udp4, logger),
     udp6Client: client(udp6, logger),
     tcpClient: tcp.client(logger),
-    tcpServer: tcp.server(logger)
+    tcpServer: tcp.server(logger),
+    redisServer:  function () {},
+    redisClient: function () {}
   };
 };

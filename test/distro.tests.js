@@ -34,6 +34,14 @@ describe('distro', function() {
     it('tcpClient', function () {
       factory.should.have.property('tcpClient');
     });
+
+    it('redisServer', function () {
+      factory.should.have.property('redisServer');
+    });
+
+    it('redisClient', function () {
+      factory.should.have.property('redisClient');
+    });    
   });
 
   describe('factory', function () {
