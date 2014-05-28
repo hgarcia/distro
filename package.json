@@ -26,6 +26,6 @@
     "url": "https://github.com/hgarcia/distro/issues"
   },
   "dependencies": {
-    "node-redis-pubsub": "~0.2.1"
+    "redis": "0.10.3"
   }
 }

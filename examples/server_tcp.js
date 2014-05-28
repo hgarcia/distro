@@ -1,6 +1,6 @@
 var distro = require("../index");
 
-var server = distro.create({log: function () {}}).tcpServer({port: 41234});
+var server = distro.create('tcp', {log: function () {}}).server({port: 41234});
 server.receive(cb);
 server.receive(cb2);
 server.post(post);
