@@ -4,16 +4,33 @@
 
 ### UPDATES
 
+0.3.1 Added documentation for 0.3.0
+0.3.0 Added support for Redis and major changes on the API.
 0.0.5 Added support for TCP servers and clients
 0.0.2 Initial release
 
-This is a very early version and the API may change but I like what I have so far.
+The API of version 0.3.1 has significant changes when compared to the previous versions, please read below.
 
-As part of the package I included a message factory as well to try to formalize an early interface for these messages that the servers and clients can agree upon and provide some other layers on top of the basic UDP protocol (see below "Working with verbs").
+### What's distro?
+
+The distro module is intended to simplify the way services communicate with each other. It abstracts several different transports while providing a consistent interface. It also specifies a message format and comes with some helper factories to create and parse those messages.
+
+It comes with some pre-packaged trasports for udp4 and udp6, tcp and redis (using pub-sub).
+You can easily create your own transports as plug-ins (more details below).
+
+### Usage cases.
+
+Let's say you have an orders service that creates orders for customers. You also want to keep the rolling total for a given customer and you want the customer service to update the data on the customer.
+
+Distro can easily dispatch a message to the proper service. On the orders service you will have some code like this:
+
+    var updateCustomer = distro.createMessage({uri: "/customer/", address: "customer.service.com", port: 442200}; {})
+    distro.create('tcp').client({port: 41234, address: 'customer.service.com'}).send(updateCustomer);
 
 ### Install
 
 Simple do `npm install distro`
+
 
 ### Creating a server
 
