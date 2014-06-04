@@ -1,9 +1,10 @@
-# "Distro" encapsulates the work needed to create UDP and TCP servers and clients and add a simple message protocol.
+# "Distro" encapsulates the work needed to servers and clients for distributed systems.
 
 [![Build Status](https://travis-ci.org/hgarcia/distro.png?branch=master)](https://travis-ci.org/hgarcia/distro)
 
 ### UPDATES
 
+0.4.0 Removed Redis into distro-redis as a plug-in
 0.3.1 Added documentation for 0.3.0
 0.3.0 Added support for Redis and major changes on the API.
 0.0.5 Added support for TCP servers and clients
@@ -15,8 +16,8 @@ The API of version 0.3.1 has significant changes when compared to the previous v
 
 The distro module is intended to simplify the way services communicate with each other. It abstracts several different transports while providing a consistent interface. It also specifies a message format and comes with some helper factories to create and parse those messages.
 
-It comes with some pre-packaged trasports for udp4 and udp6, tcp and redis (using pub-sub).
-You can easily create your own transports as plug-ins (more details below).
+It comes with some pre-packaged trasports for udp4, udp6 and tcp. You can also use redis (using pub-sub) via the distro-redis module plug-in.
+You can easily create your own transports as plug-ins as well (more details below).
 Note that there is not inter-operability between transports. Both clients and servers have to use the same transport to be able to talk to each other.
 
 ### Usage cases.
@@ -41,7 +42,7 @@ Creating a server is as simple as given the name of the transport to use and som
     var server = distro.create('udp4')
       .server({port: 41234});
 
-Supported transports at the moment are 'udp4', 'udp6', 'tcp' and 'redis'
+Supported transports at the moment are 'udp4', 'udp6' and 'tcp'.
 
 You can register multiple handlers per server.
 
@@ -65,6 +66,16 @@ The send method takes a distro `Message` that you can easily create using the li
     var msg = distro.message({uri: "/identifier/"}, "Payload can be anything, even a string");
     client.send(msg);
 
+If you want to use the distro-redis plugin just add the `distro-redis` module to your `package.json` and create a new server or client passing the module as the argument of the `create` method.
+
+    var distro = require("distro");
+    var distroRedis = require("distro-redis");
+
+    var client = distro.create(distroRedis)
+      .client({port: 41234});
+
+    var server = distro.create(distroRedis)
+      .server({port: 41234});
 
 ### The Messages
 
